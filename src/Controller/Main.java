@@ -121,6 +121,7 @@ public class Main {
                 case 5:
                     break;
                 case 6:
+                    mn.print_Salary(teach_Manages);
                     break;
                 case 7:
                     return;
