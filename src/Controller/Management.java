@@ -9,6 +9,7 @@ import Model.Subject;
 import Model.Teach_Manage;
 import Model.Teacher;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  *
@@ -153,9 +154,26 @@ public class Management {
                                 teachs[i].getClasses_num()[j]);
                     }
                 }
-
             }
         }
     }
-
+    
+    protected double sum_Salary(Teach_Manage teachs){
+        double sum =0;
+        for (int i=0;i<teachs.getSubjects().length;i++){
+            sum += (teachs.getSubjects()[i].getTotal_Theory()*teachs.getSubjects()[i].getCost_Theory() + (teachs.getSubjects()[i].getTotal_Lesson() - teachs.getSubjects()[i].getTotal_Theory()) * 0.7 * teachs.getSubjects()[i].getCost_Theory())*teachs.getClasses_num()[i];
+        }
+        return sum;
+    }
+    
+    protected void print_Salary(Teach_Manage[] teachs){
+        System.out.printf("%-20s| %-10s|\n","Teacher Name","Salary");
+        for (int i= 0;i<teachs.length;i++){
+            if(teachs[i].getTeacher().getId()!=0){
+                System.out.println("");
+                System.out.printf("%-20s| %-10f|",teachs[i].getTeacher().getName()
+                                    ,sum_Salary(teachs[i]));
+            }
+        }
+    }
 }

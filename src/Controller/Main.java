@@ -59,7 +59,7 @@ public class Main {
         teachers[1] = new Teacher(102, "Phan Truong Lam", "Nghe An", "08644789", 2);
         teachers[2] = new Teacher(103, "Hoai Thu", "Thanh Hoa", "097543237", 3);
         
-        
+
             
         while (true) {
             System.out.println("-------------------------------------------------------------------------------");
