@@ -5,6 +5,8 @@
  */
 package Controller;
 
+import Model.Subject;
+import Model.Teach_Manage;
 import Model.Teacher;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -109,5 +111,55 @@ public class Utility {
 
         System.out.printf("%-5d| %-20s| %-10s| %-13s| %-20s|\n", teacher.getId(), name, address, teacher.getPhone(), level);
 
+    }
+
+    protected Teacher search_Teacher(Teacher[] teachers) {
+        int id;
+        do {
+            id = checkInterger("Enter your ID Teacher: ");
+
+            if (id != 0) {
+                for (int i = 0; i < teachers.length; i++) {
+                    if (id == teachers[i].getId()) {
+                        return teachers[i];
+                    }
+                }
+                System.err.println("Your ID is not exist in system !!!");
+            } else {
+                System.err.println("Your Id can't be 0 !!!");
+            }
+
+        } while (true);
+    }
+
+    protected int sum_lesson(Teach_Manage[] teachs, Teacher teacher) {
+        int sum = 0;
+        for (int i = 0; i < teachs.length; i++) {
+            if (teachs[i].getTeacher().equals(teacher)) {
+                for (int j = 0; j < teachs[i].getSubjects().length; j++) {
+                    sum += teachs[i].getSubjects()[j].getTotal_Lesson();
+                }
+            }
+        }
+        return sum;
+    }
+
+    protected Subject seacrh_subject(Subject[] subjects) {
+        int id;
+        do {
+            id = checkInterger("Enter ID Subject: ");
+
+            if (id != 0) {
+                for (int i = 0; i < subjects.length; i++) {
+                    if (id == subjects[i].getSubject_Id()) {
+                        return subjects[i];
+                    }
+                }
+                System.err.println("This subject is not exist in system !!!");
+            } else {
+                System.err.println("Subject's id can't be 0 !!!");
+            }
+
+        } while (true);
     }
 }

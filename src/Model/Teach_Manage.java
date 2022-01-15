@@ -10,11 +10,12 @@ package Model;
  * @author asus
  */
 public class Teach_Manage {
+
     private Teacher teacher;
     private Subject[] subjects;
-    private int classes_num;
+    private int[] classes_num;
 
-    public Teach_Manage(Teacher teacher, Subject[] subjects, int classes_num) {
+    public Teach_Manage(Teacher teacher, Subject[] subjects, int[] classes_num) {
         this.teacher = teacher;
         this.subjects = subjects;
         this.classes_num = classes_num;
@@ -39,18 +40,14 @@ public class Teach_Manage {
         this.subjects = subjects;
     }
 
-    public int getClasses_num() {
+    public int[] getClasses_num() {
         return classes_num;
     }
 
-    public void setClasses_num(int classes_num) {
+    public void setClasses_num(int[] classes_num) {
         this.classes_num = classes_num;
     }
 
-    @Override
-    public String toString() {
-        return "Teach_Manage{" + "teacher=" + teacher + ", subjects=" + subjects + ", classes_num=" + classes_num + '}';
-    }
-    
-    
 }
+
+

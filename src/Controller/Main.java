@@ -41,8 +41,12 @@ public class Main {
             for (int j = 0; j < sub.length; j++) {
                 sub[j] = new Subject(0, " ", 0, 0, 0);
             }
+            int[] classes = new int [100];
+            for (int j = 0;j<classes.length;j++){
+                classes[j] = 0;
+            }
             Teacher teacher = new Teacher(0, " ", " ", " ", 3);
-            teach_Manages[i] = new Teach_Manage(teacher, sub, 0);
+            teach_Manages[i] = new Teach_Manage(teacher, sub, classes);
         }
 
         //Test data:
@@ -54,7 +58,9 @@ public class Main {
         teachers[0] = new Teacher(101, "Truong Bui", "Ha Noi", "0986787866", 4);
         teachers[1] = new Teacher(102, "Phan Truong Lam", "Nghe An", "08644789", 2);
         teachers[2] = new Teacher(103, "Hoai Thu", "Thanh Hoa", "097543237", 3);
-                
+        
+        
+            
         while (true) {
             System.out.println("-------------------------------------------------------------------------------");
             System.out.println("1.  Enter new subject");
@@ -93,11 +99,13 @@ public class Main {
                             if (teachers[i].getId() == 0) {
                                 teachers[0] = mn.input_Teacher(101);
                                 System.out.println("Input Teacher Susccessfully !!!");
+                                break;
                             }
                         } else {
                             if (teachers[i].getId() == 0) {
                                 teachers[i] = mn.input_Teacher(teachers[i - 1].getId());
                                 System.out.println("Input Teacher Susccessfully !!!");
+                                break;
                             }
                         }
                     }
@@ -105,6 +113,8 @@ public class Main {
                     mn.print_Teachers(teachers);                    
                     break;
                 case 3:
+                    mn.teach(teachers, subjects, teach_Manages);
+                    mn.print_teachs(teach_Manages);
                     break;
                 case 4:
                     break;
