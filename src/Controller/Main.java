@@ -5,6 +5,11 @@
  */
 package Controller;
 
+import Model.Subject;
+import Model.Teach_Manage;
+import Model.Teacher;
+import java.io.IOException;
+
 /**
  *
  * @author asus
@@ -14,8 +19,104 @@ public class Main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // TODO code application logic here
+        Management mn = new Management();
+        Utility util = new Utility();
+
+        Subject[] subjects = new Subject[100];
+        Teacher[] teachers = new Teacher[100];
+        Teach_Manage[] teach_Manages = new Teach_Manage[teachers.length];
+
+        for (int i = 0; i < subjects.length; i++) {
+            subjects[i] = new Subject(0, " ", 0, 0, 0);
+        }
+
+        for (int i = 0; i < teachers.length; i++) {
+            teachers[i] = new Teacher(0, " ", " ", " ", 3);
+        }
+
+        for (int i = 0; i < teach_Manages.length; i++) {
+            Subject[] sub = new Subject[100];
+            for (int j = 0; j < sub.length; j++) {
+                sub[j] = new Subject(0, " ", 0, 0, 0);
+            }
+            Teacher teacher = new Teacher(0, " ", " ", " ", 3);
+            teach_Manages[i] = new Teach_Manage(teacher, sub, 0);
+        }
+
+        //Test data:
+        subjects[0] = new Subject(101, "Mathematics", 100, 80, 10);
+        subjects[1] = new Subject(102, "OOP Java", 150, 75, 30);
+        subjects[2] = new Subject(103, "Avanced Mathematics", 70, 60, 20);
+        subjects[3] = new Subject(104, "Advanced Algorithms", 100, 90, 35);
+
+        teachers[0] = new Teacher(101, "Truong Bui", "Ha Noi", "0986787866", 4);
+        teachers[1] = new Teacher(102, "Phan Truong Lam", "Nghe An", "08644789", 2);
+        teachers[2] = new Teacher(103, "Hoai Thu", "Thanh Hoa", "097543237", 3);
+                
+        while (true) {
+            System.out.println("-------------------------------------------------------------------------------");
+            System.out.println("1.  Enter new subject");
+            System.out.println("2.  Enter new teacher");
+            System.out.println("3.  Register new job");
+            System.out.println("4.  Show teacher management");
+            System.out.println("5.  Sort teacher management");
+            System.out.println("6.  Show salary");
+            System.out.println("7.  Exit");
+            int choice = util.checkChoice("Enter your choice: ", 1, 7);
+
+            switch (choice) {
+                case 1:
+                    for (int i = 0; i < subjects.length; i++) {
+                        if (i == 0) {
+                            if (subjects[i].getSubject_Id() == 0) {
+                                subjects[0] = mn.input_Subject(101);
+                                System.out.println("Input Subject Succesfully !!!");
+                                break;
+                            }
+                        } else {
+                            if (subjects[i].getSubject_Id() == 0) {
+                                subjects[i] = mn.input_Subject(subjects[i - 1].getSubject_Id());
+                                System.out.println("Input Subject Successfully !!!");
+                                break;
+                            }
+                        }
+                    }
+
+                    mn.print_Subjects(subjects);
+
+                    break;
+                case 2:
+                    for (int i = 0; i < teachers.length; i++) {
+                        if (i == 0) {
+                            if (teachers[i].getId() == 0) {
+                                teachers[0] = mn.input_Teacher(101);
+                                System.out.println("Input Teacher Susccessfully !!!");
+                            }
+                        } else {
+                            if (teachers[i].getId() == 0) {
+                                teachers[i] = mn.input_Teacher(teachers[i - 1].getId());
+                                System.out.println("Input Teacher Susccessfully !!!");
+                            }
+                        }
+                    }
+                    
+                    mn.print_Teachers(teachers);                    
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    return;
+            }
+        }
+
     }
-    
+
 }

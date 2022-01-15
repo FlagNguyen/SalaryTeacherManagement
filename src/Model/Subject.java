@@ -10,6 +10,7 @@ package Model;
  * @author asus
  */
 public class Subject {
+
     private int subject_Id;
     private String subject_NameString;
     private int total_Lesson;
@@ -69,9 +70,8 @@ public class Subject {
 
     @Override
     public String toString() {
-        return "Subject{" + "subject_Id=" + subject_Id + ", subject_NameString=" + subject_NameString + ", total_Lesson=" + total_Lesson + ", total_Theory=" + total_Theory + ", cost_Theory=" + cost_Theory + '}';
+        String out = String.format("%-5d| %-20s| %-12d| %-12d| %s%-12d| ", getSubject_Id(), getSubject_NameString(), getTotal_Lesson(), getTotal_Theory(), "$", getCost_Theory());
+        return out;
     }
-    
-    
-    
+
 }
