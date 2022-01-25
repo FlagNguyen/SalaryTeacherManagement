@@ -50,15 +50,15 @@ public class Main {
         }
 
         //Test data:
-        subjects[0] = new Subject(101, "Mathematics", 100, 80, 10);
-        subjects[1] = new Subject(102, "OOP Java", 150, 75, 30);
-        subjects[2] = new Subject(103, "Avanced Mathematics", 70, 60, 20);
-        subjects[3] = new Subject(104, "Advanced Algorithms", 100, 90, 35);
+        subjects[0] = new Subject(101, "Mathematics", 70, 50, 10);
+        subjects[1] = new Subject(102, "OOP Java", 60, 40, 30);
+        subjects[2] = new Subject(103, "Avanced Mathematics", 70, 30, 20);
+        subjects[3] = new Subject(104, "Advanced Algorithms", 50, 20, 35);
 
-        teachers[0] = new Teacher(101, "Truong Bui", "Ha Noi", "0986787866", 4);
+        teachers[0] = new Teacher(101, "TrUOng    BUI", "Ha Noi", "0986787866", 4);
         teachers[1] = new Teacher(102, "Phan Truong Lam", "Nghe An", "08644789", 2);
         teachers[2] = new Teacher(103, "Hoai Thu", "Thanh Hoa", "097543237", 3);
-        
+                
 
             
         while (true) {
@@ -66,11 +66,10 @@ public class Main {
             System.out.println("1.  Enter new subject");
             System.out.println("2.  Enter new teacher");
             System.out.println("3.  Register new job");
-            System.out.println("4.  Show teacher management");
-            System.out.println("5.  Sort teacher management");
-            System.out.println("6.  Show salary");
-            System.out.println("7.  Exit");
-            int choice = util.checkChoice("Enter your choice: ", 1, 7);
+            System.out.println("4.  Sort teacher management");
+            System.out.println("5.  Show salary");
+            System.out.println("6.  Exit");
+            int choice = util.checkChoice("Enter your choice: ", 1, 6);
 
             switch (choice) {
                 case 1:
@@ -117,13 +116,23 @@ public class Main {
                     mn.print_teachs(teach_Manages);
                     break;
                 case 4:
+                    System.out.println("1.  Sort by name");
+                    System.out.println("2.  Sort by lesson");
+                    switch (util.checkChoice("Enter your choice: ", 1, 2)){
+                        case 1:
+                            mn.sort_by_name(teach_Manages);
+                            break;
+                        case 2:
+                            mn.sort_by_lesson(teach_Manages);
+                    }
+                    mn.print_teachs(teach_Manages);
                     break;
                 case 5:
-                    break;
-                case 6:
                     mn.print_Salary(teach_Manages);
                     break;
-                case 7:
+                case 6:
+                    return;
+                default:
                     return;
             }
         }

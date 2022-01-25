@@ -9,7 +9,6 @@ import Model.Subject;
 import Model.Teach_Manage;
 import Model.Teacher;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  *
@@ -22,7 +21,7 @@ public class Management {
     protected Subject input_Subject(int subject_id) throws IOException {
         int id = subject_id + 1;
 
-        String name = util.checkString("Enter subject's name: ");
+        String name = util.standardlizeString(util.checkString("Enter subject's name: "));
         int total_lesson = util.checkChoice("Enter total lesson: ", 1, 200);
         int total_theory = util.checkChoice("Enter total theory lesson: ", 1, total_lesson);
         int cost = util.checkInterger("Enter cost per theory lesson: ");
@@ -34,8 +33,8 @@ public class Management {
     protected Teacher input_Teacher(int teacher_id) throws IOException {
         int id = teacher_id + 1;
 
-        String name = util.checkString("Enter teacher's name: ");
-        String address = util.checkString("Enter teacher's address: ");
+        String name = util.standardlizeString(util.checkString("Enter teacher's name: "));
+        String address = util.standardlizeString(util.checkString("Enter teacher's address: "));
         String phone = "";
 
         do {
@@ -82,97 +81,142 @@ public class Management {
         Teacher teacher = util.search_Teacher(teachers);
         System.out.println("This's your information: ");
         util.print_Teacher(teacher);
-        Subject subject = null;
 
-        for (int i = 0; i < teachs.length; i++) {
-            if (teachs[i].getTeacher().getId() == teacher.getId()) { //teachs[i] is your teacher information of class
-                if (util.sum_lesson(teachs, teacher) >= 200) {
-                    System.out.println("You can't teach more subject !");
-                } else { // Nếu vẫn nhận được lớp tiếp
-                    subject = util.seacrh_subject(subjects);
-                    for (int j = 0; j < teachs[i].getSubjects().length; j++) { //Vòng lăp các môn học để nhận
-                        if (teachs[i].getSubjects()[j].equals(subject)) { //Đã nhận dạy môn này rồi
-                            if (teachs[i].getClasses_num()[j] == 3) {// Nếu đã nhận dạy đủ 3 lớp
-                                System.out.println("You can't take more classes in this subject");
-                                break;
-                            } else if (teachs[i].getClasses_num()[j] < 3) {
-                                int classes = util.checkChoice("Enter number of class: ", 1, 3 - teachs[i].getClasses_num()[j]);
-                                teachs[i].getClasses_num()[j] += classes;
-                                break;
-                            }
-                        } else if (teachs[i].getSubjects()[j].getSubject_Id() != 0) {//Nếu chưa nhận môn này
-                            teachs[i].getSubjects()[j] = subject;
-                            int num = 0;
+        if (util.sum_lesson(teachs, teacher) >= 200) {
+            System.out.println("You cant's teach more subject !");
+            return;
+        }
 
-                            do {
-                                num = util.checkChoice("Enter number of class", 0, 3);
-
-                                if (util.sum_lesson(teachs, teacher) + subject.getTotal_Lesson() * num <= 200) {
-                                    break;
-                                }
-                                System.out.println("Your lesson will be over exceed !!");
-                            } while (true);
-                            teachs[i].getClasses_num()[j] = num;
-                            break;
-                        }
-                    }
+        int pos = 0;
+        if (util.find_Teacher(teachs, teacher)) {
+            for (int i = 0; i < teachs.length; i++) {
+                if (teachs[i].getTeacher().equals(teacher)) {
+                    pos = i;
+                    break;
+                }
+            }
+        } else {
+            for (int i = 0; i < teachs.length; i++) {
+                if (teachs[i].getTeacher().getId() == 0) {
+                    pos = i;
+                    teachs[pos].setTeacher(teacher);
+                    break;
                 }
             }
         }
-        for (int k = 0; k < teachs.length; k++) {
-            if (teachs[k].getTeacher().getId() != 0) {
-                subject = util.seacrh_subject(subjects);
-                for (int l = 0; l < teachs[k].getSubjects().length; l++) {
-                    if (teachs[k].getSubjects()[l].getSubject_Id() != 0) {
-                        teachs[k].getSubjects()[l] = subject;
-                        int num = 0;
-                        do {
-                            num = util.checkChoice("Enter number of class", 0, 3);
 
-                            if (util.sum_lesson(teachs, teacher) + subject.getTotal_Lesson() * num <= 200) {
-                                break;
-                            }
-                            System.out.println("Your lesson will be over exceed !!");
-                        } while (true);
-                        teachs[k].getClasses_num()[l] = num;
-                    }
+        Subject sub = util.seacrh_subject(subjects);
+        System.out.println(sub.toString());
+
+        if (util.find_Subject(teachs[pos].getSubjects(), sub)) { //Teacher has been taught this subject
+            for (int i = 0; i < teachs[pos].getSubjects().length; i++) {
+                if (teachs[pos].getSubjects()[i].equals(sub)) {
+
+                    System.out.printf("You have taught %d classes this subject !\n", teachs[pos].getClasses_num()[i]);
+                    int num = 0;
+                    do {
+                        num = util.checkChoice("Enter number of class you want to change: ", 0, 3);
+                        if (util.sum_lesson(teachs, teacher) + sub.getTotal_Lesson() * num <= 200) {
+                            break;
+                        }
+                        System.out.println("Your lesson will be over exceed !!");
+                    } while (true);
+                    teachs[pos].getClasses_num()[i] = num;
+                    break;
+                }
+            }
+        } else { //Teacher has not taught this subject
+            for (int i = 0; i < teachs[pos].getSubjects().length; i++) {
+                if (teachs[pos].getSubjects()[i].getSubject_Id() == 0 && util.sum_lesson(teachs, teacher) + sub.getTotal_Lesson() < 200) {
+                    int num = 0;
+
+                    do {
+                        num = util.checkChoice("Enter number of class: ", 0, 3);
+                        if (util.sum_lesson(teachs, teacher) + sub.getTotal_Lesson() * num <= 200) {
+                            break;
+                        }
+                        System.out.println("Your lesson will be over exceed !!");
+                    } while (true);
+                    teachs[pos].getSubjects()[i] = sub;
+                    teachs[pos].getClasses_num()[i] = num;
+                    break;
+
                 }
             }
         }
     }
 
     protected void print_teachs(Teach_Manage[] teachs) {
+        System.out.println("");
         for (int i = 0; i < teachs.length; i++) {
             if (teachs[i].getTeacher().getId() != 0) {
-                System.out.printf("Teacher %d", i + 1);
+                System.out.printf("Teacher info:\n");
                 util.print_Teacher(teachs[i].getTeacher());
 
-                System.out.printf("%-20s| %-5s|", "Subject Name", "Number Class");
+                System.out.printf("%-20s| %-5s|\n", "Subject Name", "Number Class");
                 for (int j = 0; j < teachs[i].getSubjects().length; j++) {
                     if (teachs[i].getSubjects()[j].getSubject_Id() != 0) {
-                        System.out.printf("%-20s| %-5d|", teachs[i].getSubjects()[j].getSubject_NameString(),
+                        System.out.printf("%-20s| %-12d|\n", teachs[i].getSubjects()[j].getSubject_NameString(),
                                 teachs[i].getClasses_num()[j]);
                     }
+                }
+
+                System.out.println("Total lesson: " + util.sum_lesson(teachs, teachs[i].getTeacher()));
+                System.out.println();
+            }
+        }
+    }
+
+    protected double sum_Salary(Teach_Manage teachs) {
+        double sum = 0;
+        for (int i = 0; i < teachs.getSubjects().length; i++) {
+            sum += (teachs.getSubjects()[i].getTotal_Theory() * teachs.getSubjects()[i].getCost_Theory()
+                    + // Total theory lesson 
+                    (teachs.getSubjects()[i].getTotal_Lesson() - teachs.getSubjects()[i].getTotal_Theory()) * (0.7 * teachs.getSubjects()[i].getCost_Theory())) // Total pratice lesson
+                    * teachs.getClasses_num()[i];
+        }
+        return sum;
+    }
+
+    protected void print_Salary(Teach_Manage[] teachs) {
+        System.out.printf("%-20s| %-10s|\n", "Teacher Name", "Salary");
+        for (int i = 0; i < teachs.length; i++) {
+            if (teachs[i].getTeacher().getId() != 0) {
+                System.out.printf("%-20s| %-9.2f$|\n", util.standardlizeString(teachs[i].getTeacher().getName()),
+                        sum_Salary(teachs[i]));
+            }
+        }
+    }
+
+    protected void sort_by_name(Teach_Manage[] teachs) {
+        for (int i = 0; i < teachs.length - 1; i++) {
+            for (int j = i + 1; j < teachs.length; j++) {
+                if (teachs[i].getTeacher().getName().compareTo(teachs[j].getTeacher().getName()) > 0) {
+                    Teach_Manage temp = teachs[i];
+                    teachs[i] = teachs[j];
+                    teachs[j] = temp;
                 }
             }
         }
     }
-    
-    protected double sum_Salary(Teach_Manage teachs){
-        double sum =0;
-        for (int i=0;i<teachs.getSubjects().length;i++){
-            sum += (teachs.getSubjects()[i].getTotal_Theory()*teachs.getSubjects()[i].getCost_Theory() + (teachs.getSubjects()[i].getTotal_Lesson() - teachs.getSubjects()[i].getTotal_Theory()) * 0.7 * teachs.getSubjects()[i].getCost_Theory())*teachs.getClasses_num()[i];
-        }
-        return sum;
-    }
-    
-    protected void print_Salary(Teach_Manage[] teachs){
-        System.out.printf("%-20s| %-10s|\n","Teacher Name","Salary");
-        for (int i= 0;i<teachs.length;i++){
-            if(teachs[i].getTeacher().getId()!=0){
-                System.out.println("");
-                System.out.printf("%-20s| %-10f|",teachs[i].getTeacher().getName()
-                                    ,sum_Salary(teachs[i]));
+
+    protected void sort_by_lesson(Teach_Manage[] teachs) {
+        for (int i = 0; i < teachs.length; i++) {
+            if (teachs[i].getTeacher().getId() != 0) {
+                for (int a = 0; a < teachs[i].getClasses_num().length - 1; a++) {
+                    for (int b = a + 1; b < teachs[i].getClasses_num().length; b++) {
+                        if (teachs[i].getClasses_num()[a] < teachs[i].getClasses_num()[b]) {
+                            Subject temp = teachs[i].getSubjects()[a];
+                            int tmp = teachs[i].getClasses_num()[a];
+
+                            teachs[i].getSubjects()[a] = teachs[i].getSubjects()[b];
+                            teachs[i].getClasses_num()[a] = teachs[i].getClasses_num()[b];
+
+                            teachs[i].getSubjects()[b] = temp;
+                            teachs[i].getClasses_num()[b] = tmp;
+                        }
+                    }
+                }
             }
         }
     }

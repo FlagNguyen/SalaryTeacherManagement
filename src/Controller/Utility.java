@@ -29,7 +29,7 @@ public class Utility {
                 if (output >= a && output <= b) {
                     break;
                 }
-                System.err.printf("\nPlease enter %d-%d !!", a, b);
+                System.err.printf("\nPlease enter %d-%d !!\n", a, b);
 
             } while (true);
         } catch (Exception e) {
@@ -119,9 +119,9 @@ public class Utility {
             id = checkInterger("Enter your ID Teacher: ");
 
             if (id != 0) {
-                for (int i = 0; i < teachers.length; i++) {
-                    if (id == teachers[i].getId()) {
-                        return teachers[i];
+                for (Teacher teacher : teachers) {
+                    if (id == teacher.getId()) {
+                        return teacher;
                     }
                 }
                 System.err.println("Your ID is not exist in system !!!");
@@ -134,10 +134,12 @@ public class Utility {
 
     protected int sum_lesson(Teach_Manage[] teachs, Teacher teacher) {
         int sum = 0;
-        for (int i = 0; i < teachs.length; i++) {
-            if (teachs[i].getTeacher().equals(teacher)) {
-                for (int j = 0; j < teachs[i].getSubjects().length; j++) {
-                    sum += teachs[i].getSubjects()[j].getTotal_Lesson();
+        for (int i = 0;i<teachs.length;i++){
+            if(teachs[i].getTeacher().equals(teacher)){
+                for (int j = 0 ; j< teachs[i].getSubjects().length;j++){
+                    if(teachs[i].getSubjects()[j].getSubject_Id() !=0){
+                        sum += teachs[i].getSubjects()[j].getTotal_Lesson() * teachs[i].getClasses_num()[j];
+                    }
                 }
             }
         }
@@ -161,5 +163,23 @@ public class Utility {
             }
 
         } while (true);
+    }
+
+    protected boolean find_Teacher(Teach_Manage[] teachs, Teacher teacher) {
+        for (Teach_Manage teach : teachs) {
+            if (teach.getTeacher().equals(teacher)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected boolean find_Subject(Subject[] subjects, Subject sub) {
+        for (int i = 0; i<subjects.length;i++){
+            if(subjects[i].equals(sub)){
+                return true;
+            }
+        }
+        return false;
     }
 }
